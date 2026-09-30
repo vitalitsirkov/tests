@@ -74,14 +74,14 @@
 
   <div class="entry">
     <h2>cmfc</h2>
-    <p>CMAF fragmented mp4 (major brand iso6, compatible brand cmfc).</p>
+    <p>Video-only (no audio), matching real CMAF single-track nature; major and compatible brand both cmfc. Non-fragmented (plain moov) so it plays via a static &lt;video&gt; tag - a fragmented/empty-moov version was tried first but wasn't progressively playable without MSE.</p>
     <video controls playsinline><source src="mp4_brand_tests/cmfc.mp4" type="video/mp4"></video>
     <a href="mp4_brand_tests/cmfc.mp4" download="cmfc.mp4">Download cmfc.mp4</a>
   </div>
 
   <div class="entry">
     <h2>cmfs</h2>
-    <p>Brand forced via ffmpeg's -brand override on the cmfc file above.</p>
+    <p>Video-only (no audio), same as cmfc above but with the cmfs brand forced instead.</p>
     <video controls playsinline><source src="mp4_brand_tests/cmfs.mp4" type="video/mp4"></video>
     <a href="mp4_brand_tests/cmfs.mp4" download="cmfs.mp4">Download cmfs.mp4</a>
   </div>
