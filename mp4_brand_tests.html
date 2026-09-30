@@ -74,16 +74,21 @@
 
   <div class="entry">
     <h2>cmfc</h2>
-    <p>Video-only (no audio), matching real CMAF single-track nature; major and compatible brand both cmfc. Non-fragmented (plain moov) so it plays via a static &lt;video&gt; tag - a fragmented/empty-moov version was tried first but wasn't progressively playable without MSE.</p>
+    <p>Video-only (no audio), H.264 (libx264), major and compatible brand both cmfc.
+      Earlier versions copied the same defective HEVC bitstream as unplayable.mp4 (the
+      original WI-44553 file) - with no audio track to anchor the media pipeline, that
+      bitstream defect made the whole load abort after ~1s instead of just blanking the
+      video like iso5-8 (which have audio) do. Re-encoded from a clean H.264 source to
+      decouple this from the unrelated HEVC bug.</p>
     <video controls playsinline><source src="mp4_brand_tests/cmfc.mp4" type="video/mp4"></video>
     <a href="mp4_brand_tests/cmfc.mp4" download="cmfc.mp4">Download cmfc.mp4</a>
   </div>
 
   <div class="entry">
-    <h2>cmfc_v2 (cache-bust retest)</h2>
-    <p>Same content as cmfc above, uploaded under a brand-new filename to rule out
-      browser/CDN caching from cmfc.mp4 having been overwritten multiple times at
-      the same URL in quick succession.</p>
+    <h2>cmfc_v2</h2>
+    <p>Same content as cmfc above, kept under this second filename from an earlier
+      caching investigation (caching turned out not to be the actual issue - see cmfc's
+      note above for the real root cause).</p>
     <video controls playsinline><source src="mp4_brand_tests/cmfc_v2.mp4" type="video/mp4"></video>
     <a href="mp4_brand_tests/cmfc_v2.mp4" download="cmfc_v2.mp4">Download cmfc_v2.mp4</a>
   </div>
