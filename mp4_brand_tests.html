@@ -9,31 +9,24 @@
       margin: 0;
       padding: 16px;
       box-sizing: border-box;
+      font-family: sans-serif;
     }
     h1 {
       font-size: 20px;
     }
     .entry {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 6px;
-      padding: 12px 0;
+      padding: 10px 0;
       border-bottom: 1px solid #ddd;
     }
     .entry h2 {
-      margin: 0;
+      margin: 0 0 4px;
       font-size: 15px;
       font-family: monospace;
     }
     .entry p {
-      margin: 0;
+      margin: 0 0 4px;
       font-size: 13px;
       color: #555;
-    }
-    video {
-      max-width: min(360px, 100%);
-      height: auto;
     }
   </style>
 </head>
@@ -41,6 +34,10 @@
   <h1>MP4/ISO-BMFF ftyp brand detection samples</h1>
   <p>One file per major/compatible brand, generated with ffmpeg. Used to verify mmmagic/wi_magic detection
     (see WI-44553 and the follow-up brand-coverage ticket).</p>
+  <p><strong>Each brand is on its own isolated page</strong> - putting many &lt;video&gt; elements on one
+    page was found to trigger a separate, unrelated WI video-rendering issue (confirmed: the exact same
+    file plays fine in isolation but not when many other videos share the page), so this index intentionally
+    avoids embedding any &lt;video&gt; tags directly.</p>
 
   <div class="entry">
     <h2>hvc1</h2>
@@ -49,83 +46,62 @@
   </div>
 
   <div class="entry">
-    <h2>iso5</h2>
-    <video controls playsinline><source src="mp4_brand_tests/iso5.mp4" type="video/mp4"></video>
-    <a href="mp4_brand_tests/iso5.mp4" download="iso5.mp4">Download iso5.mp4</a>
+    <h2><a href="mp4_brand_tests/pages/iso5.html">iso5</a></h2>
   </div>
 
   <div class="entry">
-    <h2>iso6</h2>
-    <video controls playsinline><source src="mp4_brand_tests/iso6.mp4" type="video/mp4"></video>
-    <a href="mp4_brand_tests/iso6.mp4" download="iso6.mp4">Download iso6.mp4</a>
+    <h2><a href="mp4_brand_tests/pages/iso6.html">iso6</a></h2>
   </div>
 
   <div class="entry">
-    <h2>iso7</h2>
-    <video controls playsinline><source src="mp4_brand_tests/iso7.mp4" type="video/mp4"></video>
-    <a href="mp4_brand_tests/iso7.mp4" download="iso7.mp4">Download iso7.mp4</a>
+    <h2><a href="mp4_brand_tests/pages/iso7.html">iso7</a></h2>
   </div>
 
   <div class="entry">
-    <h2>iso8</h2>
-    <video controls playsinline><source src="mp4_brand_tests/iso8.mp4" type="video/mp4"></video>
-    <a href="mp4_brand_tests/iso8.mp4" download="iso8.mp4">Download iso8.mp4</a>
+    <h2><a href="mp4_brand_tests/pages/iso8.html">iso8</a></h2>
   </div>
 
   <div class="entry">
-    <h2>cmfc</h2>
-    <p>Video-only (no audio), H.264 (libx264), major and compatible brand both cmfc.
-      Earlier versions copied the same defective HEVC bitstream as unplayable.mp4 (the
-      original WI-44553 file) - with no audio track to anchor the media pipeline, that
-      bitstream defect made the whole load abort after ~1s instead of just blanking the
-      video like iso5-8 (which have audio) do. Re-encoded from a clean H.264 source to
-      decouple this from the unrelated HEVC bug.</p>
-    <video controls playsinline><source src="mp4_brand_tests/cmfc.mp4" type="video/mp4"></video>
-    <a href="mp4_brand_tests/cmfc.mp4" download="cmfc.mp4">Download cmfc.mp4</a>
+    <h2><a href="mp4_brand_tests/pages/cmfc.html">cmfc</a></h2>
+    <p>Video-only (no audio), H.264 (libx264), major and compatible brand both cmfc. Re-encoded from a
+      clean H.264 source rather than copying unplayable.mp4's HEVC stream - see cmfc_v2's note below for why.</p>
   </div>
 
   <div class="entry">
-    <h2>cmfc_v2</h2>
-    <p>Same content as cmfc above, kept under this second filename from an earlier
-      caching investigation (caching turned out not to be the actual issue - see cmfc's
-      note above for the real root cause).</p>
-    <video controls playsinline><source src="mp4_brand_tests/cmfc_v2.mp4" type="video/mp4"></video>
-    <a href="mp4_brand_tests/cmfc_v2.mp4" download="cmfc_v2.mp4">Download cmfc_v2.mp4</a>
+    <h2><a href="mp4_brand_tests/pages/cmfc_v2.html">cmfc_v2</a></h2>
+    <p>Same content as cmfc - kept as a second copy from an earlier investigation into whether copying
+      unplayable.mp4's HEVC stream (which has the illegal in-band parameter-set repeat from WI-44553) without
+      an audio track to anchor the media pipeline caused playback to abort after ~1s instead of just
+      blanking the video like iso5-8 (which have audio) do. Confirmed via fireglass.log; both cmfc and
+      cmfc_v2 are now re-encoded with clean H.264 to decouple this from the unrelated HEVC bug.</p>
   </div>
 
   <div class="entry">
-    <h2>cmfs</h2>
-    <p>Video-only (no audio), same as cmfc above but with the cmfs brand forced instead.</p>
-    <video controls playsinline><source src="mp4_brand_tests/cmfs.mp4" type="video/mp4"></video>
-    <a href="mp4_brand_tests/cmfs.mp4" download="cmfs.mp4">Download cmfs.mp4</a>
+    <h2><a href="mp4_brand_tests/pages/cmfs.html">cmfs</a></h2>
+    <p>Still uses the original defective-HEVC, video-only encode - the cmfs rule in wi_magic was removed for
+      a separate investigation and hasn't been re-added/re-verified yet. Expect application/octet-stream and
+      the same abort-after-~1s playback issue as cmfc's earlier versions until that happens.</p>
   </div>
 
   <div class="entry">
-    <h2>av01</h2>
+    <h2><a href="mp4_brand_tests/pages/av01.html">av01</a></h2>
     <p>Real AV1 encode (libaom-av1) - ffmpeg tags the av01 compatible brand automatically.</p>
-    <video controls playsinline><source src="mp4_brand_tests/av01.mp4" type="video/mp4"></video>
-    <a href="mp4_brand_tests/av01.mp4" download="av01.mp4">Download av01.mp4</a>
   </div>
 
   <div class="entry">
-    <h2>hev1</h2>
-    <p>Brand forced via ffmpeg's -brand override; underlying stream is the same HEVC content as unplayable.mp4.</p>
-    <video controls playsinline><source src="mp4_brand_tests/hev1.mp4" type="video/mp4"></video>
-    <a href="mp4_brand_tests/hev1.mp4" download="hev1.mp4">Download hev1.mp4</a>
+    <h2><a href="mp4_brand_tests/pages/hev1.html">hev1</a></h2>
+    <p>Brand forced via ffmpeg's -brand override; underlying stream is the same HEVC content as
+      unplayable.mp4 (has audio, so the WI-44553 defect should only blank the video, not abort the whole load).</p>
   </div>
 
   <div class="entry">
-    <h2>avc3</h2>
+    <h2><a href="mp4_brand_tests/pages/avc3.html">avc3</a></h2>
     <p>Real H.264 encode (libx264) with in-band parameter sets; brand forced via -brand override.</p>
-    <video controls playsinline><source src="mp4_brand_tests/avc3.mp4" type="video/mp4"></video>
-    <a href="mp4_brand_tests/avc3.mp4" download="avc3.mp4">Download avc3.mp4</a>
   </div>
 
   <div class="entry">
-    <h2>vp09</h2>
+    <h2><a href="mp4_brand_tests/pages/vp09.html">vp09</a></h2>
     <p>Real VP9 encode (libvpx-vp9); brand forced via -brand override (ffmpeg doesn't tag it automatically).</p>
-    <video controls playsinline><source src="mp4_brand_tests/vp09.mp4" type="video/mp4"></video>
-    <a href="mp4_brand_tests/vp09.mp4" download="vp09.mp4">Download vp09.mp4</a>
   </div>
 
   <div class="entry">
@@ -135,39 +111,29 @@
   </div>
 
   <div class="entry">
-    <h2>3gp4</h2>
-    <video controls playsinline><source src="mp4_brand_tests/3gp4.mp4" type="video/mp4"></video>
-    <a href="mp4_brand_tests/3gp4.mp4" download="3gp4.mp4">Download 3gp4.mp4</a>
+    <h2><a href="mp4_brand_tests/pages/3gp4.html">3gp4</a></h2>
   </div>
 
   <div class="entry">
-    <h2>3gp5</h2>
-    <video controls playsinline><source src="mp4_brand_tests/3gp5.mp4" type="video/mp4"></video>
-    <a href="mp4_brand_tests/3gp5.mp4" download="3gp5.mp4">Download 3gp5.mp4</a>
+    <h2><a href="mp4_brand_tests/pages/3gp5.html">3gp5</a></h2>
   </div>
 
   <div class="entry">
-    <h2>3gp6</h2>
-    <video controls playsinline><source src="mp4_brand_tests/3gp6.mp4" type="video/mp4"></video>
-    <a href="mp4_brand_tests/3gp6.mp4" download="3gp6.mp4">Download 3gp6.mp4</a>
+    <h2><a href="mp4_brand_tests/pages/3gp6.html">3gp6</a></h2>
   </div>
 
   <div class="entry">
-    <h2>3gp7</h2>
-    <video controls playsinline><source src="mp4_brand_tests/3gp7.mp4" type="video/mp4"></video>
-    <a href="mp4_brand_tests/3gp7.mp4" download="3gp7.mp4">Download 3gp7.mp4</a>
+    <h2><a href="mp4_brand_tests/pages/3gp7.html">3gp7</a></h2>
   </div>
 
   <div class="entry">
-    <h2>msdh</h2>
+    <h2><a href="mp4_brand_tests/pages/msdh.html">msdh</a></h2>
     <p>DASH init segment only (no media samples) - not independently playable, but valid for MIME-sniffing tests.</p>
-    <a href="mp4_brand_tests/msdh.mp4" download="msdh.mp4">Download msdh.mp4</a>
   </div>
 
   <div class="entry">
-    <h2>msix</h2>
+    <h2><a href="mp4_brand_tests/pages/msix.html">msix</a></h2>
     <p>DASH init segment only (no media samples) - not independently playable, but valid for MIME-sniffing tests.</p>
-    <a href="mp4_brand_tests/msix.mp4" download="msix.mp4">Download msix.mp4</a>
   </div>
 </body>
 </html>
