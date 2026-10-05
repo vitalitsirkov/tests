@@ -89,6 +89,16 @@
   </div>
 
   <div class="entry">
+    <h2><a href="mp4_brand_tests/pages/hvc1_remux.html">hvc1_remux</a></h2>
+    <p>Control for hvc1_major: the exact stream and audio of unplayable.mp4, copied with hvc1 as the <b>major</b> brand and moov moved to the front.</p>
+  </div>
+
+  <div class="entry">
+    <h2><a href="mp4_brand_tests/pages/hvc1_major_faststart.html">hvc1_major_faststart</a></h2>
+    <p>Control for hvc1_major: the same x265 video with moov moved to the front (faststart), hvc1 major brand.</p>
+  </div>
+
+  <div class="entry">
     <h2><a href="mp4_brand_tests/pages/hev1.html">hev1</a></h2>
     <p>Brand forced via ffmpeg's -brand override; underlying stream is the same HEVC content as
       unplayable.mp4 (has audio, so the WI-44553 defect should only blank the video, not abort the whole load).</p>
