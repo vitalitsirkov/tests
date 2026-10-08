@@ -38,6 +38,9 @@
     page was found to trigger a separate, unrelated WI video-rendering issue (confirmed: the exact same
     file plays fine in isolation but not when many other videos share the page), so this index intentionally
     avoids embedding any &lt;video&gt; tags directly.</p>
+  <p><strong><a href="mp4_brand_tests/h264/index.html">H.264 versions of the brand samples</a></strong> -
+    the same brands (iso4-iso8, hev1, hvc1) re-encoded as H.264 + AAC with the brand forced as the major brand,
+    so the picture decodes on browsers without an HEVC decoder. Used by the automated tests.</p>
 
   <div class="entry">
     <h2>hvc1</h2>
