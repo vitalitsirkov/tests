@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>xorix-test: waiting</title>
+<style>
+  body { margin: 0; font-family: Arial, sans-serif; background: #fff; color: #222; }
+  #panel { position: fixed; top: 0; right: 0; width: 300px; background: #fff; border: 1px solid #ccc; padding: 8px; z-index: 10; font-size: 12px; }
+  .sw { display: inline-block; width: 52px; height: 36px; margin: 3px; border: 1px solid #ddd; text-align: center; line-height: 36px; font-size: 11px; }
+  #content { width: 760px; padding: 20px; }
+  p { font-size: 15px; line-height: 1.5; margin: 0 0 14px; }
+  .band { height: 90px; margin: 14px 0; }
+  .card { border: 1px solid #f0f0f0; background: #fafafa; padding: 10px; margin: 10px 0; }
+</style>
+</head>
+<body>
+<div id="panel">
+  <b>Tolerance probes</b> (toggle every 1.5s)<br>
+  Each box alternates white / white-minus-N. If a box never changes at a given threshold, that diff is being suppressed.<br>
+  <div id="swatches"></div>
+  <div id="state">state: waiting</div>
+</div>
+<div id="content"></div>
+<script>
+// Deterministic content: no randomness, no network, nothing external.
+var words = "the quick brown fox jumps over the lazy dog while markets rally and councils meet to discuss new rules for harbour traffic".split(" ");
+var c = document.getElementById("content");
+var html = "";
+for (var i = 0; i < 160; i++) {
+  var t = "";
+  for (var j = 0; j < 70; j++) t += words[(i * 7 + j * 3) % words.length] + " ";
+  html += "<p>" + (i + 1) + ". " + t + "</p>";
+  if (i % 10 == 9) html += '<div class="band" style="background:linear-gradient(90deg,#' + ((i * 37) % 256).toString(16).padStart(2, "0") + '88cc,#ffcc' + ((i * 53) % 256).toString(16).padStart(2, "0") + ')"></div>';
+  if (i % 6 == 5) html += '<div class="card"><b>Card ' + (i + 1) + '</b> faint border (#f0f0f0) on #fafafa background.</div>';
+}
+c.innerHTML = html;
+
+var diffs = [2, 4, 8, 12, 16, 24];
+var sw = document.getElementById("swatches");
+diffs.forEach(function (d) {
+  var e = document.createElement("span");
+  e.className = "sw"; e.id = "sw" + d; e.textContent = "-" + d; e.style.background = "#fff";
+  sw.appendChild(e);
+});
+var on = false;
+setInterval(function () {
+  on = !on;
+  diffs.forEach(function (d) {
+    var v = (255 - d).toString(16);
+    document.getElementById("sw" + d).style.background = on ? "#" + v + v + v : "#fff";
+  });
+}, 1500);
+
+// Scroll at a fixed 700 px/s, from a fixed time after load, top to bottom once.
+var start = null, delayMs = 4000, speed = 700, st = document.getElementById("state");
+function step(ts) {
+  if (start === null) start = ts;
+  var t = ts - start;
+  if (t < delayMs) { st.textContent = "state: settling " + Math.ceil((delayMs - t) / 1000) + "s"; requestAnimationFrame(step); return; }
+  var max = document.documentElement.scrollHeight - window.innerHeight;
+  var y = Math.min(max, (t - delayMs) / 1000 * speed);
+  window.scrollTo(0, y);
+  if (y >= max) { document.title = "xorix-test: DONE"; st.textContent = "state: DONE"; return; }
+  document.title = "xorix-test: scrolling";
+  st.textContent = "state: scrolling " + Math.round(y) + "/" + max;
+  requestAnimationFrame(step);
+}
+requestAnimationFrame(step);
+</script>
+</body>
+</html>
