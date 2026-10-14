@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>n1-refocus-test</title>
+<!-- WI-48280 (N1) refocus test page. Fully static: no script, no animation, no network requests after load.
+     The first viewport is dense (text, gradients, table) so a tab refocus redraws a representative screen. -->
+<style>
+  html, body { margin: 0; background: #fff; font: 15px/1.45 Arial, sans-serif; color: #222; }
+  .hero { height: 220px; background: linear-gradient(120deg, #0b3d91, #3aa0ff 45%, #ffd36b 80%, #ff6b6b); }
+  .row { display: flex; gap: 16px; padding: 16px; }
+  .col { flex: 1; }
+  .col h2 { margin: 0 0 8px; font-size: 18px; }
+  .photo { height: 150px; margin-bottom: 10px; }
+  .p1 { background: radial-gradient(circle at 30% 40%, #fff3b0, #f08a24 40%, #5b2a86 100%); }
+  .p2 { background: conic-gradient(from 90deg at 50% 60%, #1b9aaa, #ef476f, #ffd166, #06d6a0, #1b9aaa); }
+  .p3 { background: linear-gradient(200deg, #264653, #2a9d8f 35%, #e9c46a 65%, #e76f51); }
+  table { border-collapse: collapse; margin: 0 16px 16px; width: calc(100% - 32px); }
+  td, th { border: 1px solid #bbb; padding: 4px 8px; text-align: left; }
+  tr:nth-child(even) td { background: #f2f5fa; }
+  .band { height: 60px; margin: 0 16px 16px; background: repeating-linear-gradient(45deg, #dde6f5 0 12px, #b8c9e8 12px 24px); }
+</style>
+</head>
+<body>
+<div class="hero"></div>
+<div class="row">
+  <div class="col"><div class="photo p1"></div><h2>Sunrise over the harbour</h2>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p></div>
+  <div class="col"><div class="photo p2"></div><h2>Market report</h2>
+    <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p></div>
+  <div class="col"><div class="photo p3"></div><h2>Weather</h2>
+    <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam.</p></div>
+</div>
+<div class="band"></div>
+<table>
+  <tr><th>Item</th><th>Value</th><th>Change</th><th>Notes</th></tr>
+  <tr><td>Alpha</td><td>1024.55</td><td>+1.2%</td><td>steady</td></tr>
+  <tr><td>Bravo</td><td>873.10</td><td>-0.4%</td><td>slightly down</td></tr>
+  <tr><td>Charlie</td><td>2210.00</td><td>+3.8%</td><td>strong quarter</td></tr>
+  <tr><td>Delta</td><td>96.72</td><td>-2.1%</td><td>under review</td></tr>
+  <tr><td>Echo</td><td>4410.35</td><td>+0.7%</td><td>steady</td></tr>
+  <tr><td>Foxtrot</td><td>318.90</td><td>+5.5%</td><td>new high</td></tr>
+</table>
+<div class="band"></div>
+<div class="row">
+  <div class="col"><p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.</p></div>
+  <div class="col"><p>Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus.</p></div>
+</div>
+</body>
+</html>
