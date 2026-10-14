@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>l8-test: waiting</title>
+<style>
+  body { margin: 0; font-family: Arial, sans-serif; background: #fff; color: #222; }
+  #content { width: 760px; padding: 20px; }
+  p { font-size: 15px; line-height: 1.5; margin: 0 0 14px; }
+  .band { height: 90px; margin: 14px 0; }
+  .card { border: 1px solid #f0f0f0; background: #fafafa; padding: 10px; margin: 10px 0; }
+</style>
+</head>
+<body>
+<div id="content"></div>
+<script>
+// Synthetic L8 scroll test. Deterministic content, static after load (nothing repaints except the scroll itself).
+// Params: ?speed=700 (px/s)  &delay=15000 (ms from first frame to scroll start)  &paras=160
+// Title: "l8-test: scrolling" while scrolling, "l8-test: DONE" at the bottom.
+var q = new URLSearchParams(location.search);
+var speed = +(q.get("speed") || 700), delayMs = +(q.get("delay") || 15000), paras = +(q.get("paras") || 160);
+var words = "the quick brown fox jumps over the lazy dog while markets rally and councils meet to discuss new rules for harbour traffic".split(" ");
+var html = "";
+for (var i = 0; i < paras; i++) {
+  var t = "";
+  for (var j = 0; j < 70; j++) t += words[(i * 7 + j * 3) % words.length] + " ";
+  html += "<p>" + (i + 1) + ". " + t + "</p>";
+  if (i % 10 == 9) html += '<div class="band" style="background:linear-gradient(90deg,#' + ((i * 37) % 256).toString(16).padStart(2, "0") + '88cc,#ffcc' + ((i * 53) % 256).toString(16).padStart(2, "0") + ')"></div>';
+  if (i % 6 == 5) html += '<div class="card"><b>Card ' + (i + 1) + '</b> faint border (#f0f0f0) on #fafafa background.</div>';
+}
+document.getElementById("content").innerHTML = html;
+
+var start = null;
+function step(ts) {
+  if (start === null) start = ts;
+  var t = ts - start;
+  if (t < delayMs) { requestAnimationFrame(step); return; }
+  var max = document.documentElement.scrollHeight - window.innerHeight;
+  var y = Math.min(max, (t - delayMs) / 1000 * speed);
+  window.scrollTo(0, y);
+  if (y >= max) { document.title = "l8-test: DONE"; return; }
+  if (document.title !== "l8-test: scrolling") document.title = "l8-test: scrolling";
+  requestAnimationFrame(step);
+}
+requestAnimationFrame(step);
+</script>
+</body>
+</html>
