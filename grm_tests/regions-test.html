@@ -21,7 +21,8 @@
        gap           gutter between cells in px                      default 40
        offset        shift of the whole grid in px (13 = off the 32 px Xorix tile grid)  default 0
        seed          rng seed                                        default 1
-       auto=1        start immediately (otherwise press Start or call __rg.start())
+       auto=1        start automatically (otherwise press Start or call __rg.start())
+       delay=ms      with auto=1: wait this long after load before the first tick   default 0
        ui=0          hide the control bar
 
      Script API: window.__rg = { cfg, start(), stop(), state() , log }.  state() -> { running, tick, done }.
@@ -44,7 +45,7 @@
     cols: num('cols', 6), rows: num('rows', 4), cw: num('cw', 140), ch: num('ch', 100), gap: num('gap', 40),
     offset: num('offset', 0), regions: num('regions', 4), rate: num('rate', 10), ticks: num('ticks', 100),
     pattern: q.get('pattern') || 'fixed', kind: q.get('kind') || 'noise', seed: num('seed', 1),
-    auto: q.get('auto') === '1', ui: q.get('ui') !== '0',
+    auto: q.get('auto') === '1', delay: num('delay', 0), ui: q.get('ui') !== '0',
   };
   const total = cfg.cols * cfg.rows;
   cfg.regions = Math.max(1, Math.min(cfg.regions, total));
@@ -116,7 +117,7 @@
   document.body.dataset.state = 'ready';
   document.getElementById('go').onclick = rg.start;
   document.getElementById('halt').onclick = rg.stop;
-  if (cfg.auto) rg.start();
+  if (cfg.auto) setTimeout(rg.start, cfg.delay);
 })();
 </script>
 </body>
