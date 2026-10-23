@@ -15,6 +15,8 @@
        pattern=      fixed   evenly spaced cells, same ones each tick
                      random  seeded random cells each tick
                      sweep   a window of N cells that moves one cell per tick
+                     row     the first N cells of the top row (cells side by side, one row)
+                     diag    N cells on a diagonal, each in its own row and column (wraps)
        kind=         noise (large JPEG payload) | gradient | flat (tiny payload) | text
        cols, rows    grid size                                       default 6 x 4
        cw, ch        cell size in px                                 default 140 x 100
@@ -92,6 +94,8 @@
     const n = cfg.regions, out = [];
     if (cfg.pattern === 'random') { const pool = [...Array(total).keys()]; for (let i = 0; i < n; i++) out.push(pool.splice(Math.floor(rng() * pool.length), 1)[0]); }
     else if (cfg.pattern === 'sweep') { for (let i = 0; i < n; i++) out.push((tick + i) % total); }
+    else if (cfg.pattern === 'row') { for (let i = 0; i < n; i++) out.push(i % cfg.cols); }
+    else if (cfg.pattern === 'diag') { for (let i = 0; i < n; i++) out.push((i % cfg.rows) * cfg.cols + (i % cfg.cols)); }
     else { for (let i = 0; i < n; i++) out.push(Math.floor(i * total / n)); }
     return out;
   }
