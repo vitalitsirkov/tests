@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>scroll-test</title>
+<style>
+  html, body { margin: 0; font-family: Arial, sans-serif; background: #fff; color: #222; }
+  #content { width: 440px; padding: 12px; }
+  p { font-size: 14px; line-height: 1.5; margin: 0 0 12px; }
+  .band { height: 60px; margin: 12px 0; }
+  .card { border: 1px solid #f0f0f0; background: #fafafa; padding: 8px; margin: 8px 0; }
+  body.inner { overflow: hidden; }
+  body.inner #box { position: absolute; left: 10px; top: 10px; width: 460px; height: 270px; overflow: auto; border: 1px solid #ccd; }
+</style>
+</head>
+<body>
+<!-- WI-48282 scroll test. Deterministic text, static after load; it only changes when the harness sends wheel events.
+     ?mode=page  the whole page scrolls (Xorix scroll optimiser can apply)
+     ?mode=inner a fixed-size scrolling element scrolls (damaged area is not the full screen, optimiser cannot apply)
+     ?paras=N  number of paragraphs (default 200) -->
+<div id="box"><div id="content"></div></div>
+<script>
+var q = new URLSearchParams(location.search);
+var mode = q.get("mode") || "page", paras = +(q.get("paras") || 200);
+if (mode === "inner") document.body.className = "inner"; else document.getElementById("box").style.cssText = "position:static;width:auto;height:auto;overflow:visible;border:0";
+var words = "the quick brown fox jumps over the lazy dog while markets rally and councils meet to discuss new rules for harbour traffic".split(" ");
+var html = "";
+for (var i = 0; i < paras; i++) {
+  var t = "";
+  for (var j = 0; j < 60; j++) t += words[(i * 7 + j * 3) % words.length] + " ";
+  html += "<p>" + (i + 1) + ". " + t + "</p>";
+  if (i % 10 == 9) html += '<div class="band" style="background:linear-gradient(90deg,#' + ((i * 37) % 256).toString(16).padStart(2, "0") + '88cc,#ffcc' + ((i * 53) % 256).toString(16).padStart(2, "0") + ')"></div>';
+  if (i % 6 == 5) html += '<div class="card"><b>Card ' + (i + 1) + '</b> faint border on a light background.</div>';
+}
+document.getElementById("content").innerHTML = html;
+document.title = "scroll-test: " + mode;
+</script>
+</body>
+</html>
