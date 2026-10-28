@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<head>
+    <script>
+        /**
+        * Implements cookie-less JavaScript session variables
+        * v1.0
+        *
+        * By Craig Buckler, Optimalworks.net
+        *
+        * As featured on SitePoint.com
+        * Please use as you wish at your own risk.
+        *
+        * Usage:
+        *
+        * // store a session value/object
+        * Session.set(name, object);
+        *
+        * // retreive a session value/object
+        * Session.get(name);
+        *
+        * // clear all session data
+        * Session.clear();
+        *
+        * // dump session data
+        * Session.dump();
+        */
+
+        const store = (window.name ? JSON.parse(window.name) : {});
+        window.addEventListener("DOMContentLoaded", Save, false);
+        function Save() {
+            const span = document.getElementById("accessCount");
+            const count = store["counter"] ? store["counter"] : 0;
+            span.textContent = count;
+            store["counter"] = count + 1;
+            window.name = JSON.stringify(store);
+        }
+
+    </script>
+    <script src="../common/debug-overlay.js"></script>
+</head>
+<body>
+	<h1>Refresh Page</h1>
+	</br>
+	<h2 data-id="refresh-main" data-test-id="refresh-main">Refresh main test page</h2>
+	<br/><br/>
+
+	<h1>Link to second page</h1>
+	<a data-id="refresh-page2" data-test-id="refresh-page2" href="refresh2.html">Link to refresh test page2</a>
+
+	<h1 data-id="counter-header">Refresh Counter: <span id="accessCount" data-id="accessCount"></span></h1>
+</body>
+</html>
