@@ -67,6 +67,9 @@
                 pre.style.cssText = 'position:fixed;bottom:0;left:0;margin:0;font:9px monospace;opacity:.55;pointer-events:none;max-width:100%;white-space:pre-wrap';
                 pre.textContent = line;
                 document.body.appendChild(pre);
+                // Short code on the counter element itself (<= 40 chars, no quotes): shows up in Playwright's "locator resolved to <h1 ... data-d=...>" call-log line when a counter assertion fails.
+                var h = document.querySelector('[data-id="counter-header"]');
+                if (h) { h.setAttribute('data-d', ({ NEW_TAB: 'NT', NAME_LOST_TAB_KEPT: 'NL', OK_NAME_PRESENT: 'OK' })[cls] + ' ' + d.ssTab + ' s' + d.ssLoads + ' l' + d.lsLoads + ' ' + String(d.nav).charAt(0)); }
             } catch (e) { }
         }, false);
         function Save() {
