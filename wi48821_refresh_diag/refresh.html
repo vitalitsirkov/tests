@@ -57,7 +57,7 @@
                 var d = window.__wi48821 || {};
                 var shown = (document.getElementById("accessCount") || {}).textContent;
                 var cls = d.nameBefore === '' ? (d.ssNew ? 'NEW_TAB' : 'NAME_LOST_TAB_KEPT') : 'OK_NAME_PRESENT';
-                var line = ('wi48821-page class=' + cls + ' counter=' + shown + ' nav=' + d.nav + ' tab=' + d.ssTab + ' ssLoads=' + d.ssLoads +
+                var line = ('wi48821-page v3 class=' + cls + ' counter=' + shown + ' nav=' + d.nav + ' tab=' + d.ssTab + ' ssLoads=' + d.ssLoads +
                     ' lsLoads=' + d.lsLoads + ' nameBefore=' + d.nameBefore + ' nameAfter=' + String(window.name || '').slice(0, 40) +
                     ' hist=' + d.hist + ' vis=' + d.vis + ' ref=' + d.ref + ' t0=' + d.t0 + ' dcl@' + Math.round(performance.now()) + 'ms' +
                     (d.storageErr ? ' storageErr=' + d.storageErr : '')).replace(/["\\]/g, "'");
@@ -69,7 +69,7 @@
                 document.body.appendChild(pre);
                 // Short code on the counter element itself (<= 40 chars, no quotes): shows up in Playwright's "locator resolved to <h1 ... data-d=...>" call-log line when a counter assertion fails.
                 var h = document.querySelector('[data-id="counter-header"]');
-                if (h) { h.setAttribute('data-d', ({ NEW_TAB: 'NT', NAME_LOST_TAB_KEPT: 'NL', OK_NAME_PRESENT: 'OK' })[cls] + ' ' + d.ssTab + ' s' + d.ssLoads + ' l' + d.lsLoads + ' ' + String(d.nav).charAt(0)); }
+                if (h) { h.setAttribute('title', 'T-' + d.ssTab); h.setAttribute('aria-description', 'A-' + d.ssTab); h.setAttribute('data-d', ({ NEW_TAB: 'NT', NAME_LOST_TAB_KEPT: 'NL', OK_NAME_PRESENT: 'OK' })[cls] + ' ' + d.ssTab + ' s' + d.ssLoads + ' l' + d.lsLoads + ' ' + String(d.nav).charAt(0)); }
             } catch (e) { }
         }, false);
         function Save() {
@@ -92,6 +92,6 @@
 	<h1>Link to second page</h1>
 	<a data-id="refresh-page2" data-test-id="refresh-page2" href="refresh2.html">Link to refresh test page2</a>
 
-	<h1 data-id="counter-header">Refresh Counter: <span id="accessCount" data-id="accessCount"></span></h1>
+	<h1 data-id="counter-header" data-s="static-in-markup">Refresh Counter: <span id="accessCount" data-id="accessCount"></span></h1>
 </body>
 </html>
