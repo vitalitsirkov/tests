@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>
+    <script>
+        // ===== WI-48821 DIAGNOSTICS (temporary) - runs BEFORE the counter code, records the state it is about to read =====
+        (function () {
+            var d = { nameBefore: String(window.name || '').slice(0, 60) };
+            try { var nav = performance.getEntriesByType('navigation')[0]; d.nav = nav ? nav.type : 'n/a'; } catch (e) { d.nav = 'err'; }
+            try {
+                var tabId = sessionStorage.getItem('wi48821_tab');
+                d.ssNew = !tabId;
+                if (!tabId) { tabId = Math.random().toString(36).slice(2, 7); sessionStorage.setItem('wi48821_tab', tabId); }
+                d.ssTab = tabId;
+                d.ssLoads = (parseInt(sessionStorage.getItem('wi48821_loads') || '0', 10) || 0) + 1;
+                sessionStorage.setItem('wi48821_loads', String(d.ssLoads));
+                d.lsLoads = (parseInt(localStorage.getItem('wi48821_ls') || '0', 10) || 0) + 1;
+                localStorage.setItem('wi48821_ls', String(d.lsLoads));
+            } catch (e) { d.storageErr = String(e).slice(0, 30); }
+            d.hist = history.length;
+            d.ref = (document.referrer || '').slice(0, 40);
+            d.vis = document.visibilityState;
+            d.t0 = new Date(performance.timeOrigin || Date.now()).toISOString().slice(11, 23);
+            d.parsedAt = Math.round(performance.now());
+            window.__wi48821 = d;
+        })();
+    </script>
+    <script>
+        /**
+        * Implements cookie-less JavaScript session variables
+        * v1.0
+        *
+        * By Craig Buckler, Optimalworks.net
+        *
+        * As featured on SitePoint.com
+        * Please use as you wish at your own risk.
+        *
+        * Usage:
+        *
+        * // store a session value/object
+        * Session.set(name, object);
+        *
+        * // retreive a session value/object
+        * Session.get(name);
+        *
+        * // clear all session data
+        * Session.clear();
+        *
+        * // dump session data
+        * Session.dump();
+        */
+
+        const store = (window.name ? JSON.parse(window.name) : {});
+        window.addEventListener("DOMContentLoaded", Save, false);
+        // ===== WI-48821 DIAGNOSTICS: report what the counter code did =====
+        window.addEventListener("DOMContentLoaded", function () {
+            try {
+                var d = window.__wi48821 || {};
+                var shown = (document.getElementById("accessCount") || {}).textContent;
+                var cls = d.nameBefore === '' ? (d.ssNew ? 'NEW_TAB' : 'NAME_LOST_TAB_KEPT') : 'OK_NAME_PRESENT';
+                var line = ('wi48821-page class=' + cls + ' counter=' + shown + ' nav=' + d.nav + ' tab=' + d.ssTab + ' ssLoads=' + d.ssLoads +
+                    ' lsLoads=' + d.lsLoads + ' nameBefore=' + d.nameBefore + ' nameAfter=' + String(window.name || '').slice(0, 40) +
+                    ' hist=' + d.hist + ' vis=' + d.vis + ' ref=' + d.ref + ' t0=' + d.t0 + ' dcl@' + Math.round(performance.now()) + 'ms' +
+                    (d.storageErr ? ' storageErr=' + d.storageErr : '')).replace(/["\\]/g, "'");
+                console.warn(JSON.stringify({ pageLoadId: line }));
+                var pre = document.createElement('pre');
+                pre.setAttribute('data-id', 'diag');
+                pre.style.cssText = 'position:fixed;bottom:0;left:0;margin:0;font:9px monospace;opacity:.55;pointer-events:none;max-width:100%;white-space:pre-wrap';
+                pre.textContent = line;
+                document.body.appendChild(pre);
+            } catch (e) { }
+        }, false);
+        function Save() {
+            const span = document.getElementById("accessCount");
+            const count = store["counter"] ? store["counter"] : 0;
+            span.textContent = count;
+            store["counter"] = count + 1;
+            window.name = JSON.stringify(store);
+        }
+
+    </script>
+    
+</head>
+<body>
+	<h1>Refresh Page</h1>
+	</br>
+	<h2 data-id="refresh-main" data-test-id="refresh-main">Refresh main test page</h2>
+	<br/><br/>
+
+	<h1>Link to second page</h1>
+	<a data-id="refresh-page2" data-test-id="refresh-page2" href="refresh2.html">Link to refresh test page2</a>
+
+	<h1 data-id="counter-header">Refresh Counter: <span id="accessCount" data-id="accessCount"></span></h1>
+</body>
+</html>
