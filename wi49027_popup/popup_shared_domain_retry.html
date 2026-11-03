@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Popup Shared Domain Retry</title>
+    <link rel="stylesheet" href="/file/webserver/common/test-page-style.css">
+    <link rel="stylesheet" href="../common/test-page-style.css">
+    <script src="../common/debug-overlay.js"></script>
+</head>
+<body data-id="body">
+    <div class="container">
+        <h1 id="title" data-id="title">Popup Shared Domain Retry</h1>
+        <h2 id="subtitle" data-id="subtitle">Page Policy: <span class="risk-badge risk-isolate">risk5 (Isolate)</span> - Opens a popup whose shared-domain iframe the test delays to the first-attempt timeout</h2>
+
+        <button id="button-open-popup" data-id="button-open-popup">Open popup</button>
+
+        <script>
+            document.getElementById('button-open-popup').addEventListener('click', function () {
+                window.open('popup_shared_domain_retry_content.html', '_blank');
+            });
+        </script>
+    </div>
+</body>
+</html>
