@@ -6,5 +6,7 @@
 <script>
 var v=document.getElementById('v'),st=document.getElementById('st');
 v.play().catch(function(e){st.textContent='play rejected: '+e.name});
+v.addEventListener('ended',function(){v.currentTime=0;v.play().catch(function(e){st.textContent='restart rejected: '+e.name})});
+setInterval(function(){if(v.paused||v.ended){v.currentTime=0;v.play().catch(function(){})}},500);
 setInterval(function(){st.textContent=(v.paused?'paused':'playing')+' t='+v.currentTime.toFixed(1)+' err='+(v.error?v.error.code:0)+' rs='+v.readyState},200);
 </script>
