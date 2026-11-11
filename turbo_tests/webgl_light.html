@@ -1,0 +1,18 @@
+<!doctype html><html><head><meta charset="utf-8"><title>webgl light</title>
+<style>body{margin:0;background:#202020;color:#eee;font:14px monospace}#gl{position:absolute;left:0;top:0;width:640px;height:360px}#c2{position:absolute;left:660px;top:0;width:400px;height:360px}#info{position:absolute;left:0;top:380px;white-space:pre;font-size:18px}</style></head><body>
+<canvas id="gl" width="640" height="360"></canvas><canvas id="c2" width="400" height="360"></canvas><div id="info"></div>
+<script>
+const gl=document.getElementById('gl').getContext('webgl'),c2=document.getElementById('c2').getContext('2d'),info=document.getElementById('info');
+let renderer='no webgl';
+if(gl){const e=gl.getExtension('WEBGL_debug_renderer_info');renderer=e?gl.getParameter(e.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER);
+const vs='attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}',fs='precision mediump float;uniform float t;uniform vec2 r;void main(){vec2 u=gl_FragCoord.xy/r;vec3 c=0.5+0.5*cos(t+u.xyx*6.28+vec3(0.,2.,4.));float d=length(u-vec2(0.5+0.3*cos(t*1.3),0.5+0.3*sin(t*1.7)));c=mix(c,vec3(1.),smoothstep(0.12,0.10,d));gl_FragColor=vec4(c,1.);}';
+const sh=(t,s)=>{const o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);return o},pr=gl.createProgram();gl.attachShader(pr,sh(gl.VERTEX_SHADER,vs));gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,fs));gl.linkProgram(pr);gl.useProgram(pr);
+const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);const l=gl.getAttribLocation(pr,'p');gl.enableVertexAttribArray(l);gl.vertexAttribPointer(l,2,gl.FLOAT,false,0,0);
+window.__draw=t=>{gl.uniform1f(gl.getUniformLocation(pr,'t'),t);gl.uniform2f(gl.getUniformLocation(pr,'r'),640,360);gl.drawArrays(gl.TRIANGLE_STRIP,0,4)}}
+let frames=0,t0=performance.now(),last=t0,fps=0,win=0;
+function tick(now){frames++;win++;const t=(now-t0)/1000;if(window.__draw)window.__draw(t);
+c2.fillStyle='#103050';c2.fillRect(0,0,400,360);c2.fillStyle='#ffd000';c2.fillRect((t*120)%400,60,60,60);c2.fillStyle='#ff4060';c2.fillRect(20,200+60*Math.sin(t*3),360,40);
+if(now-last>=1000){fps=win*1000/(now-last);win=0;last=now}
+info.textContent='frames '+frames+'  fps '+fps.toFixed(1)+'  t '+t.toFixed(1)+'s\nrenderer: '+renderer;document.title='f'+frames;requestAnimationFrame(tick)}
+requestAnimationFrame(tick);
+</script></body></html>
