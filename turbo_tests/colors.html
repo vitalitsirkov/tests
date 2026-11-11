@@ -1,0 +1,25 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>turbo colors</title>
+<style>
+body{margin:0;font:16px/1.3 Arial,sans-serif;background:#fff;color:#000}
+#ctl{position:fixed;left:20px;top:100px;z-index:5;width:420px}
+#ctl a,#ctl button{display:block;width:400px;height:50px;margin:0 0 12px 0;font:20px Arial;background:#ffd;border:2px solid #000;color:#00c;text-align:center;line-height:46px;cursor:pointer;text-decoration:none;box-sizing:border-box}
+.row{height:160px;display:flex;border-bottom:2px solid #000}
+.row div{flex:1;display:flex;align-items:center;justify-content:center;font:bold 28px monospace}
+.r{background:#f00;color:#fff}.g{background:#0f0;color:#000}.b{background:#00f;color:#fff}
+.c{background:#0ff;color:#000}.m{background:#f0f;color:#000}.y{background:#ff0;color:#000}
+.grad{background:linear-gradient(90deg,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);color:#000}
+.txt{height:160px;padding:8px 20px;column-count:3;font:14px/1.25 Georgia,serif;border-bottom:2px solid #000;overflow:hidden}
+.chk{background:repeating-conic-gradient(#000 0 25%,#fff 0 50%) 0 0/16px 16px}
+</style></head><body>
+<div id="ctl"><a id="lnk" href="https://example.org/" target="_blank">link target=_blank</a><button id="btn" onclick="window.open('https://example.org/','_blank')">window.open</button></div>
+<script>
+var h='';
+for(var i=0;i<14;i++){
+ h+='<div class="row"><div class="r">R '+i+'</div><div class="g">G '+i+'</div><div class="b">B '+i+'</div><div class="c">C '+i+'</div><div class="m">M '+i+'</div><div class="y">Y '+i+'</div></div>';
+ h+='<div class="row"><div class="grad">gradient '+i+'</div><div class="chk" style="color:#f00">checker '+i+'</div></div>';
+ var t='';for(var j=0;j<60;j++)t+='Row '+i+' line '+j+' the quick brown fox jumps over the lazy dog 0123456789. ';
+ h+='<div class="txt">'+t+'</div>';
+}
+document.write(h);
+</script></body></html>
