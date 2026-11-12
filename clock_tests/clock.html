@@ -1,0 +1,16 @@
+<!doctype html><html><head><meta charset="utf-8"><title>g2g clock</title>
+<style>body{margin:0;background:#fff;font:13px monospace}#c{display:block}#txt{position:absolute;left:0;top:64px;width:1100px;line-height:15px;color:#222;white-space:pre-wrap;overflow:hidden;height:300px}</style></head><body>
+<!-- Glass-to-glass probe. Row 0: a 48-bit barcode of Date.now() (ms, 16x16 px cells, black=1 white=0, 2 sync cells black/white first)
+     redrawn every animation frame. Below it a block of changing text, so the updates are realistic text-sized rectangles (kind=text)
+     or noise (kind=noise). The harness decodes the barcode from screenshots of the client and compares it with its own clock. -->
+<canvas id="c" width="1100" height="64"></canvas><div id="txt"></div>
+<script>
+const q=new URLSearchParams(location.search),kind=q.get('kind')||'text',cx=document.getElementById('c').getContext('2d'),txt=document.getElementById('txt');
+const BITS=48,CELL=16,X0=32;let n=0;
+function draw(){const t=Date.now();cx.fillStyle='#fff';cx.fillRect(0,0,1100,64);cx.fillStyle='#000';cx.fillRect(0,0,CELL,CELL);cx.fillStyle='#fff';cx.fillRect(CELL,0,CELL,CELL);
+ cx.fillStyle='#000';let v=BigInt(t);for(let i=BITS-1;i>=0;i--){if((v>>BigInt(i))&1n)cx.fillRect(X0+(BITS-1-i)*CELL,0,CELL,CELL)}
+ cx.fillStyle='#555';cx.font='12px monospace';cx.fillText(String(t),X0,40);
+ if(kind==='text'&&(n%3===0)){let s='';for(let l=0;l<18;l++){s+='row '+((n+l)%1000)+' the quick brown fox jumps over the lazy dog 0123456789 '+((n*7+l*13)%9973)+'\n'}txt.textContent=s}
+ n++;requestAnimationFrame(draw)}
+requestAnimationFrame(draw);
+</script></body></html>
